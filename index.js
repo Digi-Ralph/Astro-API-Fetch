@@ -15,15 +15,17 @@ fetch(API).then((e) =>
 
 const viewAstro = (Astronoids) => {
 	function template() {
+		button.innerText = 'loading.....';
 		for (let i = 0; i < Astronoids.length; i++) {
 			// wikipedia Rest API
 			const wikiaAPI = `https://en.wikipedia.org/w/rest.php/v1/search/page?q=${Astronoids[i].name}&limit=1`;
 
-			fetch(wikiaAPI).then((e) =>
-				e.json().then(function (data) {
-					console.log(data['pages'][0]['description']);
+			fetch(wikiaAPI)
+				.then((e) =>
+					e.json().then(function (data) {
+						// console.log(data['pages'][0]['description']);
 
-					const templateHTML = `
+						const templateHTML = `
 						<div class="astro-container">
 						<div class="img-astro">
 						<img src="${data['pages'][0]['thumbnail']['url']}" alt="" />
@@ -42,11 +44,13 @@ const viewAstro = (Astronoids) => {
 					</div>
 						`;
 
-					document
-						.querySelector('h1')
-						.insertAdjacentHTML('afterend', templateHTML);
-				})
-			);
+						document
+							.querySelector('h1')
+							.insertAdjacentHTML('afterend', templateHTML);
+					})
+				)
+				.catch((err) => console.log(err))
+				.finally(() => button.innerText.remove());
 		}
 	}
 	button.addEventListener('click', template);
